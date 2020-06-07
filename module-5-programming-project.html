@@ -1,0 +1,364 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 5 Programming Project</title>
+<style>* { font-family: monospace; }</style>
+<script>
+
+// NOTE: You must implement the data structures using the prototype approach.
+//       This is not what the book uses, so you have to convert it.
+//       See also: https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+
+// NOTE: Please review the following links regularly:
+//       https://it.pointpark.edu/tutorials/arrays-vs-objects/
+//       https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+//       https://it.pointpark.edu/tutorials/implementation-vs-interface/
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. Implement the tree data structure using the prototype (see below). Note
+//    that we have helper functions that we have to deal with, and we simply
+//    make them part of the prototype but prepend them with _, e.g., _insertNode
+//    below. This is a common convention/solution. Programmers using a tree
+//    object are not supposed to use _ methods (or properties) directly. Run
+//    some tests that show that your code works.
+
+function Node(key) {
+  this.key = key;
+  this.left = null;
+  this.right = null
+}
+
+function BinarySearchTree() {
+  // the root node
+  this.root = null;
+}
+
+// helper functions
+BinarySearchTree.prototype._insertNode = function(node, newNode) {
+  // node is the node we want to insert into
+  // newNode is the node we want to insert
+  if (newNode.key < node.key) {
+    // go to left
+    if (node.left === null) {
+      // no left node yet so assign
+      node.left = newNode;
+    }
+    else {
+      // move down tree and repeat
+      this._insertNode(node.left, newNode);
+    }
+  }
+  else {
+    // go to right
+    if (node.right === null) {
+      // no right node yet so assign
+      node.right = newNode;
+    }
+    else {
+      // move down tree and repeat
+      this._insertNode(node.right, newNode);
+    }
+  }
+}
+
+BinarySearchTree.prototype.insert = function(key) {
+  // insert new key in the tree
+  var newNode = new Node(key);
+  if (root === null) {
+    // no nodes yet
+    root = newNode;
+  }
+  else {
+    // find insert location through insertNode
+    this._insertNode(root, newNode);
+  }
+};
+
+// Uncomment to test you code:
+
+var tree = new BinarySearchTree();
+tree.insert(11);
+tree.insert(7);
+tree.insert(15);
+//// copy rest from book
+tree.insert(5);
+tree.insert(3);
+tree.insert(9);
+tree.insert(8);
+tree.insert(10);
+tree.insert(13);
+tree.insert(12);
+tree.insert(14);
+tree.insert(20);
+tree.insert(18);
+tree.insert(25);
+tree.insert(6);
+tree.print();
+
+// You need to use this function below.
+
+function printNode(value) {
+  console.log(value);
+}
+
+// 2. Implement in-order traversal using the prototype. Test your
+//    implementation with the printNode() function given above.
+//    NOTE: in-order means all keys are visited in sorted order.
+this.inOrderTraverse = function(callback) {
+    // visit all nodes of the tree using in-order traversal
+    // call callback with each key encountered
+    inOrderTraverseNode(root, callback); //{1}
+  };
+
+  var inOrderTraverseNode = function (node, callback) {
+    if (node !== null) { //{2}
+      inOrderTraverseNode(node.left, callback);  //{3}
+      callback(node.key);                        //{4}
+      inOrderTraverseNode(node.right, callback); //{5}
+    }
+  };
+// 3. Implement pre-order traversal using the prototype. Test your
+//    implementation with the printNode() function given above.
+//    NOTE: pre-order means a node is visited prior to its descendants.
+this.preOrderTraverse = function(callback) {
+   // visit all nodes of the tree using pre-order traversal
+   // call callback with each key encountered
+   preOrderTraverseNode(root, callback);
+ };
+
+ var preOrderTraverseNode = function (node, callback) {
+ if (node !== null) {
+   callback(node.key); //{1}
+   preOrderTraverseNode(node.left, callback); //{2}
+   preOrderTraverseNode(node.right, callback); //{3}
+ }
+ };
+
+// 4. Implement post-order traversal using the prototype. Test your
+//    implementation with the printNode() function given above.
+//    NOTE: pre-order means a node is visited after its descendants.
+this.postOrderTraverse = function(callback) {
+   // visit all nodes of the tree using post-order traversal
+   // call callback with each key encountered
+   postOrderTraverseNode(root, callback);
+ };
+
+ var postOrderTraverseNode = function (node, callback) {
+ if (node !== null) {
+   postOrderTraverseNode(node.left, callback);  //{1}
+   postOrderTraverseNode(node.right, callback); //{2}
+   callback(node.key);                          //{3}
+   }
+ };
+
+// 5. Implement the min method using the prototype and show that it works.
+this.min = function() {
+  // return the minimum key in the tree
+  return minNode(root); //{1}
+};
+
+var minNode = function (node) {
+if (node){
+  while (node && node.left !== null) { //{2}
+    node = node.left;                //{3}
+  }
+
+  return node.key;
+}
+return null;  //{4}
+};
+
+// 6. Implement the max method using the prototype and show that it works.
+this.max = function() {
+    // return the maximum key in the tree
+    return maxNode(root);
+  };
+
+  var maxNode = function (node) {
+    if (node){
+      while (node && node.right !== null) { //{5}
+        node = node.right;
+      }
+
+      return node.key;
+    }
+    return null;
+  };
+
+  this.remove = function() {
+    // removes the key from the tree
+    root = removeNode(root, key); //{1}
+  };
+// 7. Implement the search method using the prototype and show that it works.
+this.search = function(key) {
+  return searchNode(root, key);
+};
+var searchNode = function(node, key) {
+  if (node === null) {
+    return false;
+  }
+  if (key)
+};
+// 8. Create the tree that is given in the book if you haven't done so yet.
+//    NOTE: Use the one given right before the Tree Traversal section that
+//          includes the 6.
+tree.print();
+
+// 9. We want to make a copy of this tree, but want to make sure that the copy
+//    we create is also nicely balanced (since we did not implement AVL). We
+//    can use in-order, pre-order, and post-order traversal to retrieve the
+//    nodes. If we want the new tree to be balanced as well, which order should
+//    we use if we want to insert the nodes in the new tree?
+
+/*
+
+Doing some research, I found that the best answer would be preorder as an
+external function is probably better. The reason is that you very rarely want to
+just traverse the tree and that in most cases you are going to want to accomplish
+something else while using one of the basic traversal patterns.
+
+*/
+// 10 Run the traversal approach you picked in (9) to collect all the keys and
+//    store them in an array.
+
+var preOrderArray = [];
+function toArray(value)
+{
+  preOrderArray.push(value);
+}
+tree.preOrderTraverse(toArray);
+console.log(preOrderArray);
+
+
+// 11 Iterate through the array and insert each element inside a new tree. make
+//    sure it is balanced.
+
+var tree2 = new BinarySearchTree();
+for(i=0; i<preOrderArray.length; i++)
+{
+  tree2.insert(preOrderArray[i]);
+}
+tree2.print();
+
+// 12 Implement the graph data structure using the prototype.
+function Graph() {
+  var vertices = [];
+  var adjList = new Dictionary();
+}
+this.addVertex = function(v){
+  vertices.push(v);
+  adjList.set(v, []);
+};
+this.addEdge = functio(v, w){
+  adjList.get(v).push(w);
+  adjList.get(w).push(v);
+};
+// 13 Implement Prim's algorithm (use code from the book).
+//    NOTE1: You do not need to use the code from (12) for this question.
+//    NOTE2: Replace INF (used in the book) with Infinity.
+this.prim = function() {
+  var parent = [], key = [], visited = [];
+  length = this.graph.length, i;
+
+  for (i = 0; i < length; i++) {
+    key[i] = Infinity;
+    visited[i] = false;
+  }
+
+  key[0] = 0;
+  parent[0] = -1;
+
+  for (i = 0; i < length-1; i++) {
+    var u = minKey(key, visited);
+    visited[u] = true;
+
+    for (var v = 0; v < length; v++) {
+      if (this.graph[u] [v] && visited[v] == false
+      && this.graph[u] [v] < key[v]) {
+        parent[v] = u;
+        key[v] = this.graph[u] [v];
+      }
+    }
+  }
+  return parent;
+};
+// 14 Show that your code works using the example from the book in the minimum
+//    spanning tree section. Print both the edges and the weights that are part
+//    of the minimum spanning tree.
+this.prim = function() {
+  var parent = [], key = [], visited = [];
+  length = this.graph.length, i;
+
+  for (i = 0; i < length; i++) {
+    key[i] = Infinity;
+    visited[i] = false;
+  }
+
+  key[0] = 0;
+  parent[0] = -1;
+
+  for (i = 0; i < length-1; i++) {
+    var u = minKey (key, visited);
+    visited[u] = true;
+
+    for (var v = 0; v < length; v++) {
+      if (this.graph[u] [v] && visited[v] == false
+        && this.graph[u] [v] < key[v]) {
+          parent[v] = u;
+          key[v] = this.graph[u] [v];
+        }
+    }
+  }
+  return parent;
+};
+
+var graph = [[0, 2, 4, 0, 0, 0],
+             [2, 0, 2, 4, 2, 0],
+             [4, 2, 0, 0, 3, 0],
+             [0, 4, 0, 0, 3, 2],
+             [0, 2, 3, 3, 0, 2],
+             [0, 0, 0, 2, 2, 0]];
+
+
+this.kruskal = function() {
+  var length = this.graph.length,
+  parent = [], cost,
+  ne = 0, a, b, u, v, i, j, min;
+  cost = initializeCost();
+
+  while(ne<length-1) {
+
+    for(i=0, min = Infinity;i < length; i++) {
+      for (j-0;j < length; j++) {
+        if(cost[i] [j] < min) {
+          min=cost[i][j];
+          u = i;
+          v = j;
+        }
+      }
+    }
+    u = find(u, parent);
+    v= find(v, parent);
+
+    if (union(u, v, parent)) {
+      ne++;
+    }
+    cost[u] [v] = cost[v] [u] = Infinity;
+  }
+  return parent;
+};
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>
