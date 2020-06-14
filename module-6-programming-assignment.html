@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 6 Programming Assignment</title>
+<style>* { font-family: monospace; }</style>
+<script>
+
+// NOTE: You must implement the data structures using the no prototype approach.
+//       This is what the book uses, so you can copy it.
+//       See also: https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+
+// NOTE: Please review the following links regularly:
+//       https://it.pointpark.edu/tutorials/arrays-vs-objects/
+//       https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+//       https://it.pointpark.edu/tutorials/implementation-vs-interface/
+
+
+
+//------------------------//
+// The sorting algorithms //
+//------------------------//
+console.log("The sorting algorithms");
+
+// 1. Implement the ArrayList constructor.
+function ArrayList(){
+
+  var array = []; //{1}
+
+  this.insert = function(item){ //{2}
+    array.push(item);
+  };
+
+  this.toString= function(){ //{3}
+    return array.join();
+  };
+
+  this.bubbleSort = function(){
+    var length = array.length;           //{1}
+    for (var i=0; i<length; i++){        //{2}
+      for (var j=0; j<length-1; j++ ){ //{3}
+        if (array[j] > array[j+1]){  //{4}
+          swap(array, j, j+1);     //{5}
+        }
+      }
+    }
+  };
+
+  this.selectionSort = function(){
+    var length = array.length,            //{1}
+    indexMin;
+    for (var i=0; i<length-1; i++){       //{2}
+      indexMin = i;                     //{3}
+      for (var j=i; j<length; j++){     //{4}
+        if(array[indexMin]>array[j]){ //{5}
+          indexMin = j;             //{6}
+        }
+      }
+      if (i !== indexMin){              //{7}
+        swap(i, indexMin);
+      }
+    }
+  };
+
+  this.sequentialSearch = function(item){
+  for (var i=0; i<array.length; i++){ //{1}
+    if (item === array[i]){         //{2}
+      return i;                   //{3}
+    }
+  }
+  return -1;  //{4}
+  };
+
+}
+
+var swap = function(array, index1, index2){
+var aux = array[index1];
+array[index1] = array[index2];
+array[index2] = aux;
+};
+
+// 2. Implement the createNonSortedArray(size) function from the book.
+function createNonSortedArray(size){ //{6}
+  var array = new ArrayList();
+  for (var i = size; i> 0; i--){
+    array.insert(i);
+  }
+  return array;
+}
+
+// 3. Implement Bubble Sort inside the ArrayList constructor and test your code.
+var array = createNonSortedArray(5); //{7}
+console.log("Array:");
+console.log(array.toString());       //{8}
+console.log("Array bubbleSort:");
+array.bubbleSort();                  //{9}
+console.log(array.toString());       //{10}
+// 4. Implement Selection Sort inside the ArrayList constructor and test your
+//    code.
+var array2 = createNonSortedArray(5);
+console.log("Array:");
+console.log(array2.toString());
+array2.selectionSort();
+console.log("Array selectionSort:");
+console.log(array2.toString());
+
+
+//----------------------//
+// Searching algorithms //
+//----------------------//
+console.log("Searching algorithms");
+
+// 1. Implement the sequential search inside the ArrayList constructor and test
+//    your code.
+var array3 = createNonSortedArray(5);
+console.log("Array:");
+console.log(array3.toString());
+console.log("Array sequentialSearch(2)");
+console.log(array.sequentialSearch(2));
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>
