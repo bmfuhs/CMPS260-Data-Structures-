@@ -1,0 +1,217 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 8 Programming Assignment</title>
+<style>* { font-family: monospace; }</style>
+<script>
+
+// NOTE: You must implement the data structures using the no prototype approach.
+//       This is what the book uses, so you can copy it.
+//       See also: https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+
+// NOTE: Please review the following links regularly:
+//       https://it.pointpark.edu/tutorials/arrays-vs-objects/
+//       https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+//       https://it.pointpark.edu/tutorials/implementation-vs-interface/
+
+
+
+//----------------//
+// Big O notation //
+//----------------//
+console.log("Big O notation");
+
+// 1. Analyze the complexity of the isPalindrome function below. Make a
+//    distinction between best, worst, and average case complexity.
+
+function isPalindrome(str) {
+  for (var i = 0; i < str.length/2; i++) {
+    if (str[i] !== str[str.length-i-1]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/*
+Best case: O(1) // not a palindrome (first and last letter not matched).
+
+Average case: O(n/4)~O(n). //Between 0 to n/2 length one letter does not match.
+so we can say that, (0+(n/2))/2~ n/4
+
+O(n/4) ~ O(n)
+
+Worst case:O(n/2)~O(n) //word is palindrome or last letter does not match.
+
+*/
+
+
+// 2. Write a program that finds the minimum element in a stack in O(1) time
+//    complexity. Note that earlier solutions searched through the elements on
+//    the stack but that leads to an O(n) solution.
+//    NOTE: this question is sometimes asked on interviews.
+
+class Node {
+    constructor(val){
+        this.val = val;
+        this.next = null;
+    }
+}
+
+class ItemStack {
+    constructor(){
+        this.first = null;
+        this.last = null;
+        this.length = 0;
+        this.minStack = new MinStack();
+    }
+
+    push(val){
+        let newNode = new Node(val)
+        if (this.length === 0){
+            this.first = newNode;
+            this.last = newNode;
+
+        }else{
+           let temp = this.first;
+           this.first = newNode;
+           this.first.next= temp;
+        }
+        this.minStack.push(val)
+        this.length++;
+        return this.length;
+    }
+
+    pop(){
+        if (this.length === 0) return null;
+
+        let temp = this.first;
+
+        if (this.length === 1){
+            this.last = null;
+        }
+        this.first = this.first.next;
+        this.length--;
+
+        if(temp.val === this.minStack.first.val){
+            this.minStack.pop()
+        }
+
+        return temp;
+    }
+
+    min(){
+        if(this.length === 0) return undefined;
+        else return this.minStack.first.val;
+    }
+
+}
+
+class MinStack {
+
+    constructor(){
+        this.first = null;
+        this.last = null;
+        this.length = 0;
+    }
+
+    push(val) {
+        let newNode = new Node(val);
+        if (this.length === 0) {
+            this.first = newNode;
+            this.last = newNode;
+            this.length++;
+        }else {
+            if (val < this.first.val) {
+                let temp = this.first;
+                this.first = newNode;
+                this.first.next= temp;
+                this.length++;
+            }
+        }
+
+        return this.length;
+    }
+
+    pop() {
+
+        let temp = this.first;
+
+        if (this.length === 1){
+            this.last = null;
+        }
+        this.first = this.first.next;
+        this.length--;
+        return temp;
+    }
+
+}
+
+let itemStack = new ItemStack();
+
+itemStack.push(3);
+itemStack.push(4);
+itemStack.push(1);
+console.log(itemStack.min());
+itemStack.pop();
+console.log(itemStack.min());
+itemStack.pop();
+console.log(itemStack.min());
+itemStack.pop();
+console.log(itemStack.min());
+
+//----------------------------//
+// Having fun with algorithms //
+//----------------------------//
+console.log("Having fun with algorithms");
+
+// 1. Solve Project Euler problem 1 (https://projecteuler.net/problem=1).
+var sum = 0;
+var five_coeff = input/5;
+var three_coeff = input/3;
+var fifteen_coeff = input/15;
+
+for(i = 1; i < three_coeff; i++){
+    if(i < five_coeff){
+        sum += i*5;
+    }
+    sum+= i*3;
+}
+for(i = 1; i < fifteen_coeff; i++){
+    sum-= i*15;
+}
+return sum;
+};
+
+var input = prompt("Enter the bounds");
+
+start = new Date().getTime();
+answer = solution3(input);
+end = new Date().getTime();
+console.log('Answer #3: ' + answer);
+console.log('Runtime #3: ' + (end - start) + 'ms');
+
+// 2. Solve Project Euler problem 2 (https://projecteuler.net/problem=2).
+var prev_val=0;
+var cur_val=0;
+var FibN=1;
+var sum=0;
+
+while(FibN <= 4000000 - prev_val){
+    cur_val = FibN;
+    FibN += prev_val;
+    prev_val = cur_val;
+    console.log(FibN);
+    if(FibN%2 === 0){ sum+=FibN;}
+}
+
+console.log(sum);
+
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>
