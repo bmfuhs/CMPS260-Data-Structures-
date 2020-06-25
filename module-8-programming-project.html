@@ -1,0 +1,271 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CMPS 260: Module 8 Programming Project</title>
+<style>* { font-family: monospace; }</style>
+<script>
+
+// NOTE: You must implement the data structures using the prototype approach.
+//       This is not what the book uses, so you have to convert it.
+//       See also: https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+
+// NOTE: Please review the following links regularly:
+//       https://it.pointpark.edu/tutorials/arrays-vs-objects/
+//       https://it.pointpark.edu/tutorials/no-prototype-vs-prototype/
+//       https://it.pointpark.edu/tutorials/implementation-vs-interface/
+
+
+
+//---------//
+// Project //
+//---------//
+console.log("Project");
+
+// 1. What is the worst case complexity of the following function?
+
+function hasDuplicates(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    for (var j = 0; j < arr.length; j++) {
+      if (i !== j && arr[i] === arr[j]) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/*
+The worst-case complexity of the function is O(n2).
+
+where n = arr.length or simply length of the array.
+
+*/
+
+
+// 2. Implement a faster version of the same function and analyze the
+//    complexity of this approach.
+
+function hasDuplicatesFast(arr) {
+  // todo
+  let map = {};
+  let cheker = false;
+
+  for(let i = 0; i < arr.length; i++) {
+
+    if(map[arr[i]]) {
+      checker = true;
+    break;
+    }
+  map[arr[i]] = true;
+  }
+}
+
+// 3. The travelling salesman problem is a another classic problem and we are
+//    going to solve it using a greedy algorithm. Before starting, please read
+//    through the article on Wikipedia:
+//      https://en.wikipedia.org/wiki/Travelling_salesman_problem
+//    Then implement the following:
+//    (a) Create a graph that represents the example symmetric TSP problem on
+//        the Wikipedia page.
+//    (b) Implement a greedy search that finds the shortest path. You should
+//        have the following steps: (1) pick node A as the starting position,
+//        (2) pick the closest neighbor that has not been visited as the next
+//        city to visit, (3) continue this process until returning to A,
+//        (4) print the final length of the path and also the sequence of
+//        the cities.
+//    (c) Check your results, do they make sense? Is is the optimal solution?
+
+/*
+ Get all possible paths
+ @param {GraphVertex} startVertex
+ @param {GraphVertex[][]} [paths]
+ @param {GraphVertex[]} [path]
+*/
+
+function findAllPaths(startVertex, paths = [], path = []) {
+
+  const currentPath = [...path];
+  currentPath.push(startVertex);
+
+  const visitedSet = currentPath.reduce((accumulator, vertex) => {
+    const updatedAccumulator = { ...accumulator };
+    updatedAccumulator[vertex.getKey()] = vertex;
+
+    return updatedAccumulator;
+  }, {});
+
+  const unvisitedNeighbors = startVertex.getNeighbors().filter((neighbor) => {
+    return !visitedSet[neighbor.getKey()];
+  });
+
+  if (!unvisitedNeighbors.length) {
+    paths.push(currentPath);
+
+    return paths;
+  }
+
+  for (let neighborIndex = 0; neighborIndex < unvisitedNeighbors.length; neighborIndex += 1) {
+    const currentUnvisitedNeighbor = unvisitedNeighbors[neighborIndex];
+    findAllPaths(currentUnvisitedNeighbor, paths, currentPath);
+  }
+  return paths;
+}
+
+/*
+ @param {number[][]} adjacencyMatrix
+ @param {object} verticesIndices
+ @param {GraphVertex[]} cycle
+ @return {number}
+ */
+
+function getCycleWeight(adjacencyMatrix, verticesIndices, cycle) {
+  let weight = 0;
+
+  for (let cycleIndex = 1; cycleIndex < cycle.length; cycleIndex += 1) {
+    const fromVertex = cycle[cycleIndex - 1];
+    const toVertex = cycle[cycleIndex];
+    const fromVertexIndex = verticesIndices[fromVertex.getKey()];
+    const toVertexIndex = verticesIndices[toVertex.getKey()];
+    weight += adjacencyMatrix[fromVertexIndex][toVertexIndex];
+  }
+
+  return weight;
+}
+
+/*
+  @param {Graph} graph
+  @return {GraphVertex[]}
+*/
+export default function bfTravellingSalesman(graph) {
+  // Pick starting point from where to traverse the graph.
+  const startVertex = graph.getAllVertices()[0];
+
+  // Generate all possible paths from startVertex.
+  const allPossiblePaths = findAllPaths(startVertex);
+
+  // Filter out paths that are not cycles.
+  const allPossibleCycles = allPossiblePaths.filter((path) => {
+
+/*
+  @var {GraphVertex}
+*/
+    const lastVertex = path[path.length - 1];
+    const lastVertexNeighbors = lastVertex.getNeighbors();
+
+    return lastVertexNeighbors.includes(startVertex);
+  });
+
+  // Go through all possible cycles and pick the one with minimum overall tour weight.
+  const adjacencyMatrix = graph.getAdjacencyMatrix();
+  const verticesIndices = graph.getVerticesIndices();
+  let salesmanPath = [];
+  let salesmanPathWeight = null;
+  for (let cycleIndex = 0; cycleIndex < allPossibleCycles.length; cycleIndex += 1) {
+    const currentCycle = allPossibleCycles[cycleIndex];
+    const currentCycleWeight = getCycleWeight(adjacencyMatrix, verticesIndices, currentCycle);
+
+    // If current cycle weight is smaller then previous ones treat current cycle as most optimal.
+    if (salesmanPathWeight === null || currentCycleWeight < salesmanPathWeight) {
+      salesmanPath = currentCycle;
+      salesmanPathWeight = currentCycleWeight;
+    }
+  }
+
+  // Return the solution.
+  return salesmanPath;
+}
+
+// 4. Solve https://csacademy.com/contest/interview-archive/task/intersecting-rectangles/
+//    What is the runtime complexity of your solution?
+//    HINT: Try to break down the problems into smaller steps. For example,
+//          find a convenient way to represent rectangles and define a function
+//          that tests whether one rectangle is inside another. Then test your
+//          code on just two rectangles first to make sure it works.
+
+function main() {
+ var n = nextInt();
+ var rectangles = new Array(n);
+ for (var i = 0; i < n; i += 1) {
+     rectangles[i] = {};
+     rectangles[i].x1 = nextInt();
+     rectangles[i].y1 = nextInt();
+     rectangles[i].x2 = nextInt();
+     rectangles[i].y2 = nextInt();
+ }
+ var answer = intersectingRectangles(rectangles);
+ console.log(answer);
+}
+// parameter rectangles is an array of objects where each object
+// has the fields x1, y1, x2, y2 with integer values
+// the function should return an integer
+function intersectingRectangles(rectangles) {
+ let result = 0;
+ for(let i=0; i<rectangles.length; i++)
+     for(let j=i+1; j<rectangles.length; j++)
+     if(doOverlap(rectangles[i], rectangles[j]))
+         result++;
+ return result;
+}
+
+function doOverlap(rect1, rect2)
+{
+ if(rect1.x2 <= rect2.x1 || rect2.x2 <= rect1.x1)
+     return false;
+ if(rect1.y2 <= rect2.y1 || rect2.y2 <= rect1.y1)
+     return false;
+
+ return true;
+}
+// default parsers for JS.
+function nextInt() {
+ return parseInt(nextString());
+}
+
+function nextFloat() {
+ return parseFloat(nextString());
+}
+
+function nextString() {
+ var next_string = "";
+ clearWhitespaces();
+ while (input_cursor < input_stdin.length && !isWhitespace(input_stdin[input_cursor])) {
+     next_string += input_stdin[input_cursor];
+     input_cursor += 1;
+ }
+ return next_string;
+}
+
+function nextChar() {
+ clearWhitespaces();
+ if (input_cursor < input_stdin.length) {
+     return input_stdin[input_cursor++];
+ } else {
+     return '\0';
+ }
+}
+
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_cursor = 0;
+process.stdin.on('data', function (data) { input_stdin += data; });
+process.stdin.on('end', function () { main(); });
+
+function isWhitespace(character) {
+ return ' \t\n\r\v'.indexOf(character) > -1;
+}
+
+function clearWhitespaces() {
+ while (input_cursor < input_stdin.length && isWhitespace(input_stdin[input_cursor])) {
+     // ignore the next whitespace character
+     input_cursor += 1;
+ }
+
+</script>
+</head>
+<body>
+  See console!
+</body>
+</html>
